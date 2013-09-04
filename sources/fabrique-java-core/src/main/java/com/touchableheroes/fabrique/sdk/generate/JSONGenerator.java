@@ -9,6 +9,11 @@ import com.touchableheroes.fabrique.sdk.generate.model.ClassModel;
 import com.touchableheroes.fabrique.sdk.generate.util.FileUtil;
 import com.touchableheroes.fabrique.sdk.generate.util.PackageUtil;
 
+/**
+ * Generate JSON-File from Java-Class.
+ * 
+ * @author asiebert
+ */
 public class JSONGenerator {
 
 	private final Gson json;

@@ -2,13 +2,16 @@ package com.touchableheroes.fabrique.sdk.generate.model;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.touchableheroes.fabrique.sdk.generate.util.MethodUtil;
 
+/**
+ * @author asiebert
+ */
 public class AnnotationModel {
 	
 	private static Set<String> EXCLUDE_METHODS = new HashSet<String>();
@@ -22,7 +25,7 @@ public class AnnotationModel {
 	
 	private transient final Annotation backRef;
 	
-	public final List<AnnotationValueModel> values;
+	public final Map<String, Object> values;
 	
 	public AnnotationModel(final Annotation annotation) {
 		backRef = annotation;
@@ -31,21 +34,49 @@ public class AnnotationModel {
 		this.values = extractAnnotationValues(type);
 	}
 
-	private List<AnnotationValueModel> extractAnnotationValues(
+	private Map<String, Object> extractAnnotationValues(
 			Class<? extends Annotation> type) {
 		final Method[] methods = type.getMethods();
-		final List<AnnotationValueModel> values = new ArrayList<AnnotationValueModel>();
+		final Map<String, Object> values = new HashMap<String, Object>(methods.length);
 		
 		for (final Method method : methods ) {
 			if( skipMethod(method) )
 				continue;
 			
-			final AnnotationValueModel value = new AnnotationValueModel( method, backRef );
-			values.add( value );
+			final Object value = extractValue( method, backRef );
+			values.put( method.getName(), value );
 		};
 		
 		return values;
 	}
+	
+	private Object extractValue(final Method method, final Annotation annotation) {
+		try {
+			return method.invoke(annotation);
+		} catch (final Throwable e) {
+			System.out.println("[ERROR] couldn't extract value of annotation.method {name : " + method.getName() + "} ");
+			
+			e.printStackTrace();
+		} 
+		
+		return null;
+	}
+	
+//	private List<AnnotationValueModel> extractAnnotationValues(
+//			Class<? extends Annotation> type) {
+//		final Method[] methods = type.getMethods();
+//		final List<AnnotationValueModel> values = new ArrayList<AnnotationValueModel>();
+//		
+//		for (final Method method : methods ) {
+//			if( skipMethod(method) )
+//				continue;
+//			
+//			final AnnotationValueModel value = new AnnotationValueModel( method, backRef );
+//			values.add( value );
+//		};
+//		
+//		return values;
+//	}
 
 	private boolean skipMethod(Method method) {
 		if (EXCLUDE_METHODS.contains( method.getName() ) ) 
