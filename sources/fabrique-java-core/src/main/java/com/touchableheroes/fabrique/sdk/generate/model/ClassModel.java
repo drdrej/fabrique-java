@@ -30,7 +30,7 @@ public class ClassModel {
 		fqn = extractFQN();
 		packageName = extractPackageName();
 		
-		anntoations = extractAnnotations(); // Collections.emptyList();
+		annotations = extractAnnotations(); // Collections.emptyList();
 		fields = extractFields(); 
 		methods = extractMethods();
 		getter = extractGetter();
@@ -127,12 +127,12 @@ public class ClassModel {
 	
 	
 
-	public final List<AnnotationModel> anntoations;
+	public final List<AnnotationModel> annotations;
 	
 	public final List<FieldModel> fields;
 
 	public final List<MethodModel> methods;
 
-	private List<MethodModel> getter;
+	public final List<MethodModel> getter;
 
 }

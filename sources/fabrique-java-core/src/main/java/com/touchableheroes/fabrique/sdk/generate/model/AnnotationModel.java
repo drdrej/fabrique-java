@@ -27,11 +27,32 @@ public class AnnotationModel {
 	
 	public final Map<String, Object> values;
 	
+	public final String fqn;
+	public final String name;
+	public final String packageFqn;
+	
+	
 	public AnnotationModel(final Annotation annotation) {
 		backRef = annotation;
 		
 		final Class<? extends Annotation> type = annotation.annotationType();
 		this.values = extractAnnotationValues(type);
+		
+		fqn = extractFQN( type );
+		name = extractName(type);
+		packageFqn = extractPackage(type);
+	}
+
+	private String extractPackage(final Class<? extends Annotation> type) {
+		return type.getPackage().getName();
+	}
+
+	private String extractName(final Class<? extends Annotation> type) {
+		return type.getSimpleName();
+	}
+
+	private String extractFQN(Class<? extends Annotation> type) {
+		return type.getName();
 	}
 
 	private Map<String, Object> extractAnnotationValues(
